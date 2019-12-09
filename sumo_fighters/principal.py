@@ -11,7 +11,8 @@ window = pygame.display.set_mode((longueur, hauteur))
 pygame.display.set_caption("SumOctogone")
 
 # affichage de l'icone
-
+img_icone = pygame.image.load("images/logo.png").convert_alpha()
+pygame.display.set_icon(img_icone)
 
 # creation d'un timer
 timer = pygame.time.Clock()
@@ -32,7 +33,7 @@ x, y = 270, 300
 vx = 0  # vitesse x
 vy = 0  # vitesse y
 continuer = 1
-gravite = 2.5
+gravite = 2
 
 
 # creation de la boucle pour laisser la fenetre ouverte
@@ -43,20 +44,35 @@ while continuer:
 
         if evenement.type == KEYDOWN:
             if evenement.key == K_UP:
-                vy = -30
+                if y == 330:
+                    vy = -25
+
+            if evenement.key == K_SPACE:
+                print(y)
+
 
     timer.tick(60)
     # creation de la variable keypress
     keypress = pygame.key.get_pressed()
 
     vy += gravite
+    min(20, vy)
 
-    vx = (keypress[K_RIGHT] - keypress[K_LEFT]) * 3
+    vx = (keypress[K_RIGHT] - keypress[K_LEFT]) * 5
 
     x += vx
     y += vy
 
-    y = min(330, y)
+
+    if x >= 86 and x <= 649:
+        y = min(330, y)
+
+    if y >= 600:
+        continuer = 0
+
+
+
+
 
     # affichage des images
     window.blit(img_background, (0, 0))
@@ -64,4 +80,6 @@ while continuer:
     window.blit(img_sumo_player, (x, y))
 
     pygame.display.flip()
+
+pygame.quit()
 
