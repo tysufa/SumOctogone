@@ -23,8 +23,12 @@ img_sumo_player = pygame.image.load("images/white.png").convert_alpha()
 img_sumo_player2 = pygame.image.load("images/green.png").convert_alpha()
 img_ile = pygame.image.load("images/ile.png").convert_alpha()
 
-# creation d'un rect pour la position du sumo
-position_perso = img_sumo_player.get_rect()
+# creation des rect pour les collsions des sumos
+sumo_rect1 = img_sumo_player.get_rect()
+sumo_rect2 = img_sumo_player2.get_rect()
+
+# creations de toutes les fonctions
+
 
 
 # actualisation de la fenetre
@@ -34,11 +38,9 @@ pygame.display.flip()
 
 x_perso1, y_perso1, x_perso2, y_perso2 = 545, 300, 210, 300 # declaration des valeurs x et y de bases = positions de base des joueurs
 
-position_perso.move(100, 100)
-
 vx_perso1 = vy_perso1 = vx_perso2 = vy_perso2 = 0 # vitesse x et y des joueurs
 
-my_collisions = []
+
 
 continuer = 1
 gravite = 2.5
@@ -95,10 +97,14 @@ while continuer:
     if y_perso1 >= 600 or y_perso2 >= 600:  # ferme le jeu quand l'un des sumos tombe de l'écran
         continuer = 0
 
+    sumo_rect1.topleft = (x_perso1, y_perso1)
+    sumo_rect2.topleft = (x_perso2, y_perso2)
 
+    if sumo_rect1.colliderect(sumo_rect2):
+        print("collision")
 
-
-
+    else:
+        print("pas collsision")
 
 
     # affichage des images
