@@ -43,8 +43,9 @@ x_perso1, y_perso1, x_perso2, y_perso2 = 545, 300, 210, 300 # declaration des va
 
 vx_perso1 = vy_perso1 = vx_perso2 = vy_perso2 = 0 # vitesse x et y des joueurs
 
-nb_saut_sumo1 = 0
-nb_saut_sumo2 = 0
+nb_saut_sumo1 = nb_saut_sumo2 = 0
+
+vie_sumo1 = vie_sumo2 = 10
 
 
 
@@ -94,7 +95,9 @@ while continuer:
 
     if keypress[K_j]:  # permet de détécter si les sumos tapent
         if sumo_rect2.colliderect(sumo_rect1):  # si les sumos tapent et qu'ils se touchent en même temps alors le if est vérifié
-            continuer = 0
+            vie_sumo1 -= 1
+            if vie_sumo1 <= 0:
+                continuer = 0
 
     if keypress[K_SPACE]:
         if sumo_rect1.colliderect(sumo_rect2):
