@@ -27,6 +27,9 @@ img_ile = pygame.image.load("images/ile.png").convert_alpha()
 sumo_rect1 = img_sumo_player.get_rect()
 sumo_rect2 = img_sumo_player2.get_rect()
 
+# creation des rects pour les plateformes
+rect_ile_pricipale = img_ile.get_rect()
+
 # creations de toutes les fonctions
 
 
@@ -39,6 +42,9 @@ pygame.display.flip()
 x_perso1, y_perso1, x_perso2, y_perso2 = 545, 300, 210, 300 # declaration des valeurs x et y de bases = positions de base des joueurs
 
 vx_perso1 = vy_perso1 = vx_perso2 = vy_perso2 = 0 # vitesse x et y des joueurs
+
+nb_saut_sumo1 = 0
+nb_saut_sumo2 = 0
 
 
 
@@ -54,13 +60,19 @@ while continuer:
 
         if evenement.type == KEYDOWN:
 
-            if evenement.key == K_UP: # permet de faire le saut aux sumos
-                if y_perso1 == 330: # on ne permet au sumos de sauter que quand ils sont à la hauteur de la plateforme
-                    vy_perso1 = -25 # hauteur du saut
+            if nb_saut_sumo1 < 2:  # detecte si le sumo à fait 2 sauts ou pas
+                if evenement.key == K_UP:
+                    vy_perso1 = -25  # hauteur du saut
+                    nb_saut_sumo1 += 1
+            elif nb_saut_sumo1 >= 2:
+                nb_saut_sumo1 = 0
 
-            if evenement.key == K_w:
-                if y_perso2 == 330:
-                    vy_perso2 = -25
+            if nb_saut_sumo2 < 2: # permet de faire le saut aux sumos
+                if evenement.key == K_w:
+                    vy_perso2 = -25 # hauteur du saut
+                    nb_saut_sumo2 += 1
+            elif nb_saut_sumo2 >= 2:
+                nb_saut_sumo2 = 0
 
             if evenement.key == K_SPACE:
                 print("y1 : ", y_perso1, "x1", x_perso1, "\ny2 : ", y_perso2, "x2", x_perso2)
@@ -80,6 +92,14 @@ while continuer:
 
     vx_perso2 = (keypress[K_d] - keypress[K_a]) * 5
 
+    if keypress[K_j]:  # permet de détécter si les sumos tapent
+        if sumo_rect2.colliderect(sumo_rect1):  # si les sumos tapent et qu'ils se touchent en même temps alors le if est vérifié
+            continuer = 0
+
+    if keypress[K_SPACE]:
+        if sumo_rect1.colliderect(sumo_rect2):
+            continuer = 0
+
     x_perso1 += vx_perso1  # actualisation de la position du personnage par rapport à sa vitesse
     y_perso1 += vy_perso1
 
@@ -87,25 +107,28 @@ while continuer:
     y_perso2 += vy_perso2
 
 
-    if x_perso1 >= 86 and x_perso1 <= 649:  # permet au personnages de tomber quand il n'est plus sur la plateforme
+    if sumo_rect1.colliderect(rect_ile_pricipale):  # permet au personnages de tomber quand il n'est plus sur la plateforme
         y_perso1 = min(330, y_perso1)
 
-    if x_perso2 >= 86 and x_perso2 <= 649:
+    else:
+        pass
+
+
+
+    if sumo_rect2.colliderect(rect_ile_pricipale):
         y_perso2 = min(330, y_perso2)
+
+    else:
+        pass
 
 
     if y_perso1 >= 600 or y_perso2 >= 600:  # ferme le jeu quand l'un des sumos tombe de l'écran
         continuer = 0
 
-    sumo_rect1.topleft = (x_perso1, y_perso1)
+    sumo_rect1.topleft = (x_perso1, y_perso1)  # récupération de la position des rects pour les collisions
     sumo_rect2.topleft = (x_perso2, y_perso2)
 
-    if sumo_rect1.colliderect(sumo_rect2):
-        print("collision")
-
-    else:
-        print("pas collsision")
-
+    rect_ile_pricipale.topleft = (longueur / 2 - 500 / 2, hauteur / 2 - 30)
 
     # affichage des images
     window.blit(img_background, (0, 0))
