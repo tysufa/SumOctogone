@@ -42,7 +42,7 @@ x_perso1, y_perso1, x_perso2, y_perso2 = 545, 300, 210, 300  # declaration des v
 
 vx_perso1 = vy_perso1 = vx_perso2 = vy_perso2 = 0  # vitesse x et y des joueurs
 
-vie_sumo1 = vie_sumo2 = 100
+vie_sumo1 = vie_sumo2 = 50
 
 continuer = 1
 gravite = 2.5
@@ -70,11 +70,21 @@ while continuer:
                 print("y1 : ", y_perso1, "x1", x_perso1, " vie 1", vie_sumo1, "\ny2 : ", y_perso2, "x2", x_perso2,
                       "vie 2", vie_sumo2)
 
-            if evenement.key == K_m:
+            # si les sumos sont à proximité et qu'il appuient le code s'éxécute
+            if evenement.key == K_e:
                 if sumo_rect1.colliderect(sumo_rect2):
                     vie_sumo1 -= 1
                     print(vie_sumo1)
                     if vie_sumo1 <= 0:
+                        print("Le Joueur 2 à Gagné")
+                        continuer = 0
+
+            if evenement.key == K_l:
+                if sumo_rect2.colliderect(sumo_rect1):
+                    vie_sumo2 -= 1
+                    print(vie_sumo2)
+                    if vie_sumo2 <= 0:
+                        print("Le Joueur 1 à Gagné")
                         continuer = 0
 
     timer.tick(60)
